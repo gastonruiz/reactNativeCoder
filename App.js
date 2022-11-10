@@ -1,29 +1,102 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, TextInput, View, Button} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, Button, FlatList, Modal} from 'react-native';
 
 export default function App() {
+
+  const [textItem, setTextItem] = useState('');
+  const [itemList, setItemList] = useState([]);
+
+    const onHandleChangeItem = (t) => {
+      setTextItem(t)
+    };
+
+    const addItem = () => {
+      setItemList(currentItems => [
+        ...currentItems,  
+        {id: Math.random().toString(), value: textItem}
+      ])
+      /*setItemList([...itemList, textItem])*/
+
+      setTextItem('')
+    };
+      const renderItem = ({item}) =>(
+      <View style= {styles.items}>
+            <Text>{item.value}</Text>
+            <Button title='elegir'/>
+          </View>
+    )
+
   return (
-    <View style={{padding: 30, marginTop: 15}}>
-      <View>
-        <TextInput/>
-        <Button title="ADD" style={{padding:10}}/>
+    <View style={styles.container}>
+      <Text>Shopping List</Text>
+      <View style={styles.addItems}>
 
-      </View>
-      <View>
+        <TextInput 
+        value={textItem}
+        style={styles.imputItem }
+        placeholder='Agrega un Item'
+        onChangeText={onHandleChangeItem}
+        />
 
+        <Button 
+        title='Agregar'
+        onPress={addItem}
+        />
       </View>
-      <Text>Hola Coder!</Text>
-      <StatusBar style="auto" />
-    </View>
+      
+      <View>
+       <FlatList
+       data={itemList}
+       renderItem= {renderItem}
+       keyExtractor={(item) => item.id}
+       />
+      </View>
+
+     
+  
+      
+
+
+      
+    </View> 
+
+      
+    
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    padding: 30,
+     marginTop: 50
+    },
+
+     items: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'orange'
+     },
+
+     imputItem: {
+      borderBottomColor: 'orange',
+          borderBottomWidth: 5
+     },
+     
+    addItems:{
+      textAlign: 'center',
+      color: 'green',
+      padding: 40
+    } ,
+    button: {
+      textAlign: 'center',
+      color:'red',
+      backgroundColor:'black',
+      padding: 20,
+      height: 50,
+    }
+
+
 });
